@@ -1,6 +1,6 @@
 import unittest
 import sys
-sys.path.insert(1, '../lambdas/main')
+sys.path.insert(1, './lambdas/main')
 import index
 
 
