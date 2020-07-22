@@ -27,6 +27,12 @@ Resources:
   HelloWorld:
     Type: AWS::Serverless::Function
     Properties:
+    Cors: "'*'"
+    Auth:
+      DefaultAuthorizer: VseZaZabavoAuthorizer
+      Authorizers:
+        MyCognitoAuthorizer:
+          UserPoolArn: !GetAtt VseZaZabavoPool.Arn
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-HelloWorld'
       Handler: index.handler
       Runtime: python3.7
@@ -60,3 +66,17 @@ Resources:
       ManagedPolicyArns:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+
+  VseZaZabavoPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: VseZaZabavoPool
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      UsernameAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: false
