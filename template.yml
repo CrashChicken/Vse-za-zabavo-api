@@ -37,7 +37,7 @@ Resources:
   Main:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: /lambdas/main
+      CodeUri: ./lambdas/main
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-Main'
       Handler: index.handler
       Runtime: python3.8
