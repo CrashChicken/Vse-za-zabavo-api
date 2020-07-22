@@ -24,15 +24,19 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
+  VseZaZabavoAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: VseZaZabavoAuthorizer
+        Authorizers:
+          VseZaZabavoAuthorizer:
+            UserPoolArn: !GetAtt VseZaZabavoPool.Arn
   Main:
     Type: AWS::Serverless::Function
     Properties:
-      Cors: "'*'"
-      Auth:
-      DefaultAuthorizer: VseZaZabavoAuthorizer
-      Authorizers:
-        VseZaZabavoAuthorizer:
-          UserPoolArn: !GetAtt VseZaZabavoPool.Arn
       FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-Main'
       Handler: index.handler
       Runtime: python3.7
@@ -44,11 +48,13 @@ Resources:
         GetEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref VseZaZabavoAPI
             Path: /
             Method: get
         PostEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref VseZaZabavoAPI
             Path: /
             Method: post
 
