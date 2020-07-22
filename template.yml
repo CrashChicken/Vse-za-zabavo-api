@@ -27,8 +27,8 @@ Resources:
   Main:
     Type: AWS::Serverless::Function
     Properties:
-    Cors: "'*'"
-    Auth:
+      Cors: "'*'"
+      Auth:
       DefaultAuthorizer: VseZaZabavoAuthorizer
       Authorizers:
         VseZaZabavoAuthorizer:
