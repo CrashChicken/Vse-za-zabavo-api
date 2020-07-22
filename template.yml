@@ -24,16 +24,16 @@ Globals:
       Role: !Ref CodeDeployRole
 
 Resources:
-  HelloWorld:
+  Main:
     Type: AWS::Serverless::Function
     Properties:
     Cors: "'*'"
     Auth:
       DefaultAuthorizer: VseZaZabavoAuthorizer
       Authorizers:
-        MyCognitoAuthorizer:
+        VseZaZabavoAuthorizer:
           UserPoolArn: !GetAtt VseZaZabavoPool.Arn
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-HelloWorld'
+      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-Main'
       Handler: index.handler
       Runtime: python3.7
       Role:
@@ -51,6 +51,7 @@ Resources:
           Properties:
             Path: /
             Method: post
+
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
     Type: AWS::IAM::Role
