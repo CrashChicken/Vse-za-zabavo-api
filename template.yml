@@ -112,7 +112,7 @@ Resources:
         - AttributeName: email
           AttributeType: S
       KeySchema: 
-        - AttributeName: id
+        - AttributeName: id_prostora
           KeyType: HASH
         - AttributeName: regija
           KeyType: RANGE
