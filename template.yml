@@ -116,9 +116,9 @@ Resources:
           KeyType: HASH
         - AttributeName: regija
           KeyType: RANGE
-      ProvisionedThroughput: 
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+      #ProvisionedThroughput: 
+      #  ReadCapacityUnits: 5
+      #  WriteCapacityUnits: 5
       BillingMode: PAY_PER_REQUEST
 
   VseZaZabavoPool:
