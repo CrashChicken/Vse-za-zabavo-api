@@ -27,7 +27,7 @@ Resources:
   VseZaZabavoAPI:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Prod
+      #StageName: Prod
       Cors: "'*'"
       Auth:
         DefaultAuthorizer: VseZaZabavoAuthorizer
