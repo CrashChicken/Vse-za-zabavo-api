@@ -75,6 +75,52 @@ Resources:
         - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
 
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - AttributeName: id_prostora
+          AttributeType: S
+        - AttributeName: id_uporabnika
+          AttributeType: S
+        - AttributeName: regija
+          AttributeType: S
+        - AttributeName: ustvarjeno
+          AttributeType: N
+        - AttributeName: spremenjeno
+          AttributeType: N
+        - AttributeName: vidnost
+          AttributeType: S
+        - AttributeName: slika
+          AttributeType: S
+        - AttributeName: slike
+          AttributeType: S
+        - AttributeName: kratek_opis
+          AttributeType: S
+        - AttributeName: dolg_opis
+          AttributeType: S
+        - AttributeName: cena_od
+          AttributeType: N
+        - AttributeName: cena_do
+          AttributeType: N
+        - AttributeName: tip
+          AttributeType: S
+        - AttributeName: ime
+          AttributeType: S
+        - AttributeName: telefon
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: regija
+          KeyType: RANGE
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      BillingMode: PAY_PER_REQUEST
+
   VseZaZabavoPool:
     Type: AWS::Cognito::UserPool
     Properties:
