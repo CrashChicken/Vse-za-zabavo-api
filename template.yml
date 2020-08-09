@@ -116,6 +116,7 @@ Resources:
         - code
       CallbackURLs:
         - http://localhost/vsezazabavo/callback.php
+      AllowedOAuthFlowsUserPoolClient: true
       GenerateSecret: false
 
   VseZaZabavoPoolDomain:
