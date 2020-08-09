@@ -114,6 +114,8 @@ Resources:
       ClientName: VseZaZabavoPoolClient
       AllowedOAuthFlows: 
         - code
+      CallbackURLs:
+        - http://localhost/vsezazabavo/callback.php
       GenerateSecret: false
 
   VseZaZabavoPoolDomain:
