@@ -109,5 +109,6 @@ Resources:
 
   VseZaZabavoPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
-    Domain: vsezazabavo
-    UserPoolId: VseZaZabavoPool
+    Properties:
+      Domain: vsezazabavo
+      UserPoolId: VseZaZabavoPool
