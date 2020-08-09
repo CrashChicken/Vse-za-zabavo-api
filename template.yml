@@ -112,6 +112,7 @@ Resources:
     Properties:
       UserPoolId: !Ref VseZaZabavoPool
       ClientName: VseZaZabavoPoolClient
+      AllowedOAuthFlows: code
       GenerateSecret: false
 
   VseZaZabavoPoolDomain:
