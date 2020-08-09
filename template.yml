@@ -117,6 +117,12 @@ Resources:
       CallbackURLs:
         - http://localhost/vsezazabavo/callback.php
       AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - phone
+        - email
+        - openid
+        - aws.cognito.signin.user.admin
+        - profile
       GenerateSecret: false
 
   VseZaZabavoPoolDomain:
