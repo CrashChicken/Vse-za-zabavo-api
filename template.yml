@@ -112,8 +112,12 @@ Resources:
     Properties:
       UserPoolId: !Ref VseZaZabavoPool
       ClientName: VseZaZabavoPoolClient
+      SupportedIdentityProviders:
+        - COGNITO
       AllowedOAuthFlows: 
         - code
+        - implicit
+        - client_credentials
       CallbackURLs:
         - http://localhost/vsezazabavo/callback.php
       AllowedOAuthFlowsUserPoolClient: true
