@@ -93,6 +93,14 @@ Resources:
       #  WriteCapacityUnits: 5
       BillingMode: PAY_PER_REQUEST
 
+  S3Bucket:  
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      BucketName: vsezazabavo
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
   VseZaZabavoPool:
     Type: AWS::Cognito::UserPool
     Properties:
