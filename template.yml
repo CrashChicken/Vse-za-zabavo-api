@@ -50,6 +50,12 @@ Resources:
             RestApiId: !Ref VseZaZabavoAPI
             Path: /
             Method: get
+        PostMain:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /
+            Method: post
 
   ProstoriFunction:
     Type: AWS::Serverless::Function
