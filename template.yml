@@ -34,11 +34,12 @@ Resources:
         Authorizers:
           VseZaZabavoAuthorizer:
             UserPoolArn: !GetAtt VseZaZabavoPool.Arn
-  Main:
+
+  MainFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./lambdas/main
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-Main'
+      FunctionName: !Sub '${ProjectId}-lambda-Main'
       Handler: index.handler
       Runtime: python3.8
       Role:
@@ -46,18 +47,59 @@ Resources:
         - LambdaExecutionRole
         - Arn
       Events:
-        GetEvent:
+        GetMain:
           Type: Api
           Properties:
             RestApiId: !Ref VseZaZabavoAPI
             Path: /
             Method: get
-        PostEvent:
+
+  ProstoriFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./lambdas/prostori
+      FunctionName: !Sub '${ProjectId}-lambda-Prostori'
+      Handler: index.handler
+      Runtime: python3.8
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        GetProstori:
           Type: Api
           Properties:
             RestApiId: !Ref VseZaZabavoAPI
-            Path: /
+            Path: /prostori
+            Method: get
+            Auth:
+              Authorizer: NONE
+        PostProstori:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /prostori
             Method: post
+        GetProstor:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /prostori/{prostorId}
+            Method: get
+            Auth:
+              Authorizer: NONE
+        PutProstor:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /prostori/{prostorId}
+            Method: put
+        DeleteProstor:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /prostori/{prostorId}
+            Method: delete
 
   LambdaExecutionRole:
     Description: Creating service role in IAM for AWS Lambda
