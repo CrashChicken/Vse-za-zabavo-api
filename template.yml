@@ -42,10 +42,10 @@ Resources:
       FunctionName: !Sub '${ProjectId}-lambda-Main'
       Handler: index.handler
       Runtime: python3.8
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
+      #Role:
+      #  Fn::GetAtt:
+      #  - LambdaExecutionRole
+      #  - Arn
       Events:
         GetMain:
           Type: Api
@@ -61,10 +61,10 @@ Resources:
       FunctionName: !Sub '${ProjectId}-lambda-Prostori'
       Handler: index.handler
       Runtime: python3.8
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
+      #Role:
+      #  Fn::GetAtt:
+      #  - LambdaExecutionRole
+      #  - Arn
       Events:
         GetProstori:
           Type: Api
@@ -101,21 +101,21 @@ Resources:
             Path: /prostori/{prostorId}
             Method: delete
 
-  LambdaExecutionRole:
-    Description: Creating service role in IAM for AWS Lambda
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
-      AssumeRolePolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service: [lambda.amazonaws.com]
-          Action: sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-      PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+  #LambdaExecutionRole:
+  #  Description: Creating service role in IAM for AWS Lambda
+  #  Type: AWS::IAM::Role
+  #  Properties:
+  #    RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
+  #    AssumeRolePolicyDocument:
+  #      Statement:
+  #      - Effect: Allow
+  #        Principal:
+  #          Service: [lambda.amazonaws.com]
+  #        Action: sts:AssumeRole
+  #    Path: /
+  #    ManagedPolicyArns:
+  #      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+  #    PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
