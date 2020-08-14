@@ -56,6 +56,12 @@ Resources:
             RestApiId: !Ref VseZaZabavoAPI
             Path: /
             Method: post
+        DynMain:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VseZaZabavoAPI
+            Path: /main/{tukiID}
+            Method: get
 
   ProstoriFunction:
     Type: AWS::Serverless::Function
@@ -114,7 +120,8 @@ Resources:
           Action: sts:AssumeRole
       Path: /
       ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        #- !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole'
       PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
 
   DynamoDBTable:
@@ -123,12 +130,12 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: id_prostora
           AttributeType: S
-        - AttributeName: regija
+        - AttributeName: user
           AttributeType: S
       KeySchema: 
         - AttributeName: id_prostora
           KeyType: HASH
-        - AttributeName: regija
+        - AttributeName: user
           KeyType: RANGE
       #ProvisionedThroughput: 
       #  ReadCapacityUnits: 5
