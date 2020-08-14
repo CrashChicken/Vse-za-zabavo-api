@@ -130,12 +130,12 @@ Resources:
       AttributeDefinitions: 
         - AttributeName: id_prostora
           AttributeType: S
-        - AttributeName: user
+        - AttributeName: uporabnik
           AttributeType: S
       KeySchema: 
         - AttributeName: id_prostora
           KeyType: HASH
-        - AttributeName: user
+        - AttributeName: uporabnik
           KeyType: RANGE
       #ProvisionedThroughput: 
       #  ReadCapacityUnits: 5
