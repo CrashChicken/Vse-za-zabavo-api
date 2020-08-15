@@ -43,7 +43,8 @@ Resources:
       Handler: index.handler
       Runtime: python3.8
       Environment:
-        tableName: !Ref DynamoDBTable
+        Variables:
+          tableName: !Ref DynamoDBTable
       Role: !GetAtt LambdaExecutionRole.Arn
       Events:
         GetMain:
@@ -73,7 +74,8 @@ Resources:
       Handler: index.handler
       Runtime: python3.8
       Environment:
-        tableName: !Ref DynamoDBTable
+        Variables:
+          tableName: !Ref DynamoDBTable
       Role: !GetAtt LambdaExecutionRole.Arn
       Events:
         GetProstori:
