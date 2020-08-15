@@ -1,9 +1,11 @@
 import json
 import boto3
+import os
 import datetime
 
+tableName = os.environ['tableName']
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('awscodestar-vse-za-zabavo-a-infrastructure-DynamoDBTable-122E23LCYBJKL')
+table = dynamodb.Table(tableName)
 
 def handler(event, context):
     if event['httpMethod'] == "GET":
@@ -14,7 +16,7 @@ def handler(event, context):
             'headers': {'Content-Type': 'application/json'}}
     elif event['httpMethod'] == "POST":
         try:
-            submittedItems = json.loads(event.body)
+            submittedItems = json.loads(event['body'])
         except:
             message = {'error': 'JSON ni pravilno oblikovan'}
             return {
