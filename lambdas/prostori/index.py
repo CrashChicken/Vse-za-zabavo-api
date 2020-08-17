@@ -4,10 +4,10 @@ import os
 import datetime
 import uuid
 
-#tableName = os.environ['tableName']
-#dynamodb = boto3.resource('dynamodb')
-tableName = "prostori"
-dynamodb = boto3.resource('dynamodb', endpoint_url="http://172.18.0.2:8000")
+tableName = os.environ['tableName']
+dynamodb = boto3.resource('dynamodb')
+#tableName = "prostori"
+#dynamodb = boto3.resource('dynamodb', endpoint_url="http://172.18.0.2:8000")
 table = dynamodb.Table(tableName)
 
 def handler(event, context):
@@ -36,7 +36,7 @@ def handler(event, context):
                         'ime': submittedItems['ime'],
                         'opis': submittedItems['opis'],
                         'regija': submittedItems['regija'],
-                        'ustvarjeno': datetime.datetime.now()
+                        'ustvarjeno': str(datetime.datetime.now())
                     }
                 )
             except Exception as e:
