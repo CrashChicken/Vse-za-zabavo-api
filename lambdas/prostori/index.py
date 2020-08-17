@@ -4,10 +4,10 @@ import os
 import datetime
 import uuid
 
-tableName = os.environ['tableName']
-dynamodb = boto3.resource('dynamodb')
-#tableName = "prostori"
-#dynamodb = boto3.resource('dynamodb', endpoint_url="http://172.18.0.2:8000")
+#tableName = os.environ['tableName']
+#dynamodb = boto3.resource('dynamodb')
+tableName = "prostori"
+dynamodb = boto3.resource('dynamodb', endpoint_url="http://172.18.0.2:8000")
 table = dynamodb.Table(tableName)
 
 def handler(event, context):
@@ -17,17 +17,15 @@ def handler(event, context):
             response = table.scan()
             items = {'data': response['Items']}
         except Exception as e:
-            message = {'error': str(e)}
-            return http_response(message, 500)
+            return http_response(str(e), 500)
         else:
             return http_response(items, 200)
 
     elif event['httpMethod'] == "POST":
         try:
             submittedItems = json.loads(event['body'])
-        except:
-            message = {'error': 'JSON ni pravilno oblikovan'}
-            return http_response(message, 400)
+        except Exception as e:
+            return http_response(str(e), 400)
         else:
             id_prostora = str(uuid.uuid4())
             try:
@@ -41,9 +39,8 @@ def handler(event, context):
                         'ustvarjeno': datetime.datetime.now()
                     }
                 )
-            except:
-                message = {'error': 'Podatki niso bili shranjeni'}
-                return http_response(message, 500)
+            except Exception as e:
+                return http_response(str(e), 500)
             else:
                 message = {'id_prostora': id_prostora}
                 return http_response(message, 201)
@@ -56,8 +53,8 @@ def handler(event, context):
                     'id_uporabnika': event['requestContext']['authorizer']['claims']['cognito:username']
                 }
             )
-        except ClientError as e:
-            return http_response(e, 400)
+        except Exception as e:
+            return http_response(str(e), 400)
         else:
             return http_response(response, 200)
 def http_response(body, code):
