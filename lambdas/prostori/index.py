@@ -50,7 +50,7 @@ def handler(event, context):
             response = table.delete_item(
                 Key={
                     'id_prostora': event['pathParameters']['id_prostora'],
-                    'id_uporabnika': event['requestContext']['authorizer']['claims']['cognito:username']
+                    'id_uporabnika': event['queryStringParameters']['id_uporabnika']
                 }
             )
         except Exception as e:
