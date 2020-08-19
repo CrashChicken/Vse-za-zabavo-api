@@ -96,7 +96,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref VseZaZabavoAPI
-            Path: /prostori/{prostorId}
+            Path: /prostori/{id_prostora}
             Method: get
             Auth:
               Authorizer: NONE
@@ -104,13 +104,13 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref VseZaZabavoAPI
-            Path: /prostori/{prostorId}
+            Path: /prostori/{id_prostora}
             Method: put
         DeleteProstor:
           Type: Api
           Properties:
             RestApiId: !Ref VseZaZabavoAPI
-            Path: /prostori/{prostorId}
+            Path: /prostori/{id_prostora}
             Method: delete
 
   LambdaExecutionRole:
