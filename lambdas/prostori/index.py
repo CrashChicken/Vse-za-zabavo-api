@@ -6,7 +6,7 @@ from os import environ
 import datetime
 import uuid
 
-production = False
+production = True
 if production:
     tableName = environ['tableName']
     dynamodb = boto3.resource('dynamodb')
