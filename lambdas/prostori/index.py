@@ -8,7 +8,7 @@ from get import getList, getSingle
 from post import post
 from put import put
 from delete import delete
-from helper import http_response
+from helper import http_response, get_owner
 
 production = True
 if production:
@@ -58,28 +58,21 @@ def handler(event, context):
             regija = body['regija']
         except Exception as e:
             return http_response({"message": "Manjkajoči podatki"}, 400)
-        else:
-            data = {
-                "id_uporabnika": id_uporabnika,
-                "ime:": ime,
-                "opis": opis,
-                "regija": regija
-            }
-            return post(table, data)
+        data = {
+            "id_uporabnika": id_uporabnika,
+            "ime:": ime,
+            "opis": opis,
+            "regija": regija
+        }
+        return post(table, data)
 
     elif event['httpMethod'] == "PUT":
-        try:
-            response = table.query(
-                KeyConditionExpression=Key('id_prostora').eq(id_prostora)
-            )
-        except ClientError as e:
-            return http_response(e.response['Error'], 500)
-        if len(response['Items']) != 0:
-            lastnik = response['Items'][0]['id_uporabnika']
-        else:
-            return http_response({"message": "Ta objava ne obstaja"}, 404)
-        if id_uporabnika != lastnik:
-            message = {"Message": "Nimate pravice za urejanje te objave"}
+        owner = get_owner(table, id_prostora)
+        if owner is None:
+            message = {"message": "Ta objava ne obstaja"}
+            return http_response(message, 404)
+        if id_uporabnika != owner:
+            message = {"message": "Nimate pravice za urejanje te objave"}
             return http_response(message, 403)
         try:
             body = json.loads(event['body'])
@@ -87,24 +80,23 @@ def handler(event, context):
             return http_response(e.msg, 400)
         data = {}
         keys = ["ime", "opis", "regija"]
+        counter = 0
         for item in keys:
             if item in body:
                 data.update({item: body[item]})
-        return put(table, id_prostora, id_uporabnika, data)
+                counter += 1
+        if counter == 0:
+            return http_response({"message": "Ni definiranih sprememb"}, 400)
+        else:
+            return put(table, id_prostora, id_uporabnika, data)
 
     elif event['httpMethod'] == "DELETE":
-        try:
-            response = table.query(
-                KeyConditionExpression=Key('id_prostora').eq(id_prostora)
-            )
-        except ClientError as e:
-            return http_response(e.response['Error'], 500)
-        if len(response['Items']) != 0:
-            lastnik = response['Items'][0]['id_uporabnika']
-        else:
-            return http_response({"message": "Ta objava ne obstaja"}, 404)
-        if id_uporabnika == lastnik:
-            return delete(table, id_prostora, lastnik)
-        else:
-            message = {"Message": "Nimate pravice za brsianje te objave"}
+        owner = get_owner(table, id_prostora)
+        if owner is None:
+            message = {"message": "Ta objava ne obstaja"}
+            return http_response(message, 404)
+        if id_uporabnika != owner:
+            message = {"message": "Nimate pravice za urejanje te objave"}
             return http_response(message, 403)
+        else:
+            return delete(table, id_prostora, owner)

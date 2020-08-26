@@ -196,3 +196,11 @@ Resources:
     Properties:
       Domain: vsezazabavo
       UserPoolId: !Ref VseZaZabavoPool
+
+  VseZaZabavoPoolGroupAdmin:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties: 
+      Description: String
+      GroupName: Admin
+      Precedence: 0
+      UserPoolId: !Ref VseZaZabavoPool
