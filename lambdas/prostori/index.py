@@ -8,7 +8,7 @@ from get import getList, getSingle
 from post import post
 from put import put
 from delete import delete
-from helper import http_response, get_owner
+from helper import http_response, get_owner, json_data
 
 production = True
 if production:
@@ -53,18 +53,12 @@ def handler(event, context):
         except json.JSONDecodeError as e:
             return http_response(e.msg, 400)
         try:
-            ime = body['ime']
-            opis = body['opis']
-            regija = body['regija']
+            data = json_data(body)
         except Exception as e:
-            return http_response({"message": "Manjkajoči podatki"}, 400)
-        data = {
-            "id_uporabnika": id_uporabnika,
-            "ime:": ime,
-            "opis": opis,
-            "regija": regija
-        }
-        return post(table, data)
+            return http_response({"message": str(e)}, 400)
+        else:
+            data.update({"id_uporabnika": id_uporabnika})
+            return post(table, data)
 
     elif event['httpMethod'] == "PUT":
         owner = get_owner(table, id_prostora)
@@ -78,17 +72,15 @@ def handler(event, context):
             body = json.loads(event['body'])
         except json.JSONDecodeError as e:
             return http_response(e.msg, 400)
-        data = {}
-        keys = ["ime", "opis", "regija"]
-        counter = 0
-        for item in keys:
-            if item in body:
-                data.update({item: body[item]})
-                counter += 1
-        if counter == 0:
-            return http_response({"message": "Ni definiranih sprememb"}, 400)
+        try:
+            data = json_data(body)
+        except Exception as e:
+            return http_response({"message": str(e)}, 400)
         else:
-            return put(table, id_prostora, id_uporabnika, data)
+            if len(data) > 0:
+                return put(table, id_prostora, id_uporabnika, data)
+            else:
+                return http_response({"message": "Ni definiranih sprememb"}, 400)
 
     elif event['httpMethod'] == "DELETE":
         owner = get_owner(table, id_prostora)
