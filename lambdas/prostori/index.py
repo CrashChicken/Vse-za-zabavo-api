@@ -1,14 +1,9 @@
 import json
 import boto3
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Key
 from uuid import UUID
 from os import environ
-from get import getList, getSingle
-from post import post
-from put import put
-from delete import delete
-from helper import http_response, get_owner, json_data
+from prostori import Prostori
 
 production = True
 if production:
@@ -17,7 +12,6 @@ if production:
 else:
     tableName = "prostori"
     dynamodb = boto3.resource('dynamodb', endpoint_url="http://172.18.0.2:8000")
-    production = False
 table = dynamodb.Table(tableName)
 
 def handler(event, context):
@@ -43,52 +37,80 @@ def handler(event, context):
 
     if event['httpMethod'] == "GET":
         if id_prostora is None:
-            return getList(table)
+            try:
+                response = table.scan()
+                items = {'data': response['Items']}
+            except ClientError as e:
+                return http_response(e.response['Error'], 500)
+            else:
+                return http_response(items, 200)
         else:
-            return getSingle(table, id_prostora)
+            prostor = Prostori(table)
+            try:
+                prostor.get(id_prostora)
+            except Exception as e:
+                return http_response({"message": str(e)}, 400)
+            
+            return http_response({"data": prostor.get_all()}, 200)
 
     elif event['httpMethod'] == "POST":
         try:
             body = json.loads(event['body'])
         except json.JSONDecodeError as e:
             return http_response(e.msg, 400)
+        
+        prostor = Prostori(table)
+        prostor.create(id_uporabnika)
+
         try:
-            data = json_data(body)
+            prostor.set_all(body)
         except Exception as e:
             return http_response({"message": str(e)}, 400)
-        else:
-            data.update({"id_uporabnika": id_uporabnika})
-            return post(table, data)
+
+        try:
+            response = prostor.save()
+        except Exception as e:
+            return http_response({"message": str(e)}, 400)
+        return http_response({"data": prostor.id_prostora}, 201)
 
     elif event['httpMethod'] == "PUT":
-        owner = get_owner(table, id_prostora)
-        if owner is None:
-            message = {"message": "Ta objava ne obstaja"}
-            return http_response(message, 404)
-        if id_uporabnika != owner:
-            message = {"message": "Nimate pravice za urejanje te objave"}
-            return http_response(message, 403)
         try:
             body = json.loads(event['body'])
         except json.JSONDecodeError as e:
             return http_response(e.msg, 400)
-        try:
-            data = json_data(body)
-        except Exception as e:
-            return http_response({"message": str(e)}, 400)
-        else:
-            if len(data) > 0:
-                return put(table, id_prostora, id_uporabnika, data)
-            else:
-                return http_response({"message": "Ni definiranih sprememb"}, 400)
 
-    elif event['httpMethod'] == "DELETE":
-        owner = get_owner(table, id_prostora)
-        if owner is None:
-            message = {"message": "Ta objava ne obstaja"}
-            return http_response(message, 404)
-        if id_uporabnika != owner:
+        prostor = Prostori(table)
+        prostor.get(id_prostora)
+        if prostor.id_uporabnika == id_uporabnika:
+            try:
+                prostor.set_all(body)
+            except Exception as e:
+                return http_response({"message": str(e)}, 400)
+        else:
             message = {"message": "Nimate pravice za urejanje te objave"}
             return http_response(message, 403)
-        else:
-            return delete(table, id_prostora, owner)
+        try:
+            response = prostor.save()
+        except Exception as e:
+            return http_response({"message": str(e)}, 400)
+        return http_response({"data": response}, 201)
+
+
+    elif event['httpMethod'] == "DELETE":
+        prostor = Prostori(table)
+        prostor.get(id_prostora)
+        if prostor.id_uporabnika != id_uporabnika:
+            message = {"message": "Nimate pravice za brisanje te objave"}
+            return http_response(message, 403)
+        try:
+            response = prostor.delete()
+        except Exception as e:
+            return http_response({"message": str(e)}, 400)
+        return http_response({"data": response}, 200)
+
+def http_response(body, code):
+    return {
+        'statusCode': code,
+        'body': json.dumps(body),
+        'headers': {'Content-Type': 'application/json'}
+    }

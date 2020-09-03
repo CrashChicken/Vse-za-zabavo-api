@@ -1,0 +1,2 @@
+TIPI = ["gostišče", "šotor", "dvorana"]
+REGIJE = ["osrednjeslovenska", "podravska", "koroška", "pomurska", "savinjska", "zasavska", "gorenjska", "goriška", "notranjsko kraška", "obalna", "spodnjeposavska", "dolenjska"]
