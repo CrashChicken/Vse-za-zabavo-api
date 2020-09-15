@@ -13,7 +13,7 @@ Parameters:
   Stage:
     Type: String
     Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
-    Default: ''
+    Default: 'Staging'
 
 Globals:
   Function:
@@ -27,7 +27,7 @@ Resources:
   VseZaZabavoAPI:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Prod
+      StageName: !Ref Stage
       Cors: "'*'"
       Auth:
         DefaultAuthorizer: VseZaZabavoAuthorizer
