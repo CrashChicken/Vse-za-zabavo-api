@@ -379,7 +379,7 @@ class Prostori:
                         counter += 1
             expression = expression[:-1]
             if counter == 0:
-                raise Exception("Ni sprememb")
+                return {"message": "Ni sprememb"}
 
             try:
                 response = self.table.update_item(

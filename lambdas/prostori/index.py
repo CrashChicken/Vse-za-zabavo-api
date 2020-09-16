@@ -56,8 +56,8 @@ def handler(event, context):
     elif event['httpMethod'] == "POST":
         try:
             body = json.loads(event['body'])
-        except json.JSONDecodeError as e:
-            return http_response(e.msg, 400)
+        except:
+            return http_response({"message": "Napačno oblikovan JSON"}, 400)
         
         prostor = Prostori(table)
         prostor.create(id_uporabnika)
@@ -76,8 +76,8 @@ def handler(event, context):
     elif event['httpMethod'] == "PUT":
         try:
             body = json.loads(event['body'])
-        except json.JSONDecodeError as e:
-            return http_response(e.msg, 400)
+        except:
+            return http_response({"message": "Napačno oblikovan JSON"}, 400)
 
         prostor = Prostori(table)
         prostor.get(id_prostora)
